@@ -1,6 +1,8 @@
 QueryBuilder = {}
 QueryBuilder.__index = QueryBuilder
 
+QB, DB = QueryBuilder, QueryBuilder -- aliases
+
 local function quote(val)
     if type(val) == "string" then
         return "'" .. val:gsub("'", "''") .. "'"
