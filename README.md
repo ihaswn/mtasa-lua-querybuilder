@@ -56,7 +56,7 @@ print(query)
 ```
 
 > [!WARNING]
-> The current version is not using `dbPrepareString()`, it will be supported in the feature updates, but for know be careful with the queries and values to avoid sql injections
+> The current version is not using `dbPrepareString()`, it will be supported in the feature updates, but for now be careful with the queries and values to avoid sql injections
 
 ## Features (planned / implemented so far)
 
