@@ -31,11 +31,6 @@ function QueryBuilder:new(operation, tableName)
     return instance
 end
 
-function QueryBuilder:table(tableName)
-    self.tableName = tableName
-    return self
-end
-
 function QueryBuilder:select(tableName)
     return self:new("select", tableName)
 end
@@ -57,6 +52,11 @@ function QueryBuilder:exists(tableName)
 end
 
 -- methodes
+function QueryBuilder:table(tableName)
+    self.tableName = tableName
+    return self
+end
+
 function QueryBuilder:columns(data)
     self.columnsData = type(data) == "table" and data or {data}
     return self
@@ -235,11 +235,13 @@ function QueryBuilder:_buildWhere()
         elseif cond.group then
             local groupParts = {}
             for _, c in ipairs(cond.group) do
+                c.field = type(c.field) == "string" and "`" .. c.field .. "`" or c.field
                 table.insert(groupParts, string.format("%s %s %s", c.field, c.operator, quote(c.value)))
             end
             table.insert(parts, prefix .. "(" .. table.concat(groupParts, " AND ") .. ")")
         else
             local c = cond.condition
+            c.field = type(c.field) == "string" and "`" .. c.field .. "`" or c.field
             table.insert(parts, prefix .. string.format("%s %s %s", c.field, c.operator, quote(c.value)))
         end
     end
@@ -253,7 +255,7 @@ function QueryBuilder:_buildOrderBy()
     end
     local parts = {}
     for _, ord in ipairs(self.ordering) do
-        table.insert(parts, string.format("%s %s", ord.field, ord.direction:upper()))
+        table.insert(parts, string.format("`%s` %s", ord.field, ord.direction:upper()))
     end
     return " ORDER BY " .. table.concat(parts, ", ")
 end
@@ -291,14 +293,14 @@ function QueryBuilder:build()
                     end
                 end
                 if isArray then
-                    cols = table.concat(self.columnsData, ", ")
+                    cols = "`" .. table.concat(self.columnsData, "` , `") .. "`"
                 else
                     cols = "*"
                 end
             end
         end
 
-        sql = "SELECT " .. cols .. " FROM " .. self.tableName
+        sql = "SELECT " .. cols .. " FROM `" .. self.tableName .. "`"
         sql = sql .. self:_buildJoins()
         sql = sql .. self:_buildWhere()
         sql = sql .. self:_buildOrderBy()
