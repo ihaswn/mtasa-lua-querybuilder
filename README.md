@@ -10,7 +10,7 @@ It aims to provide a fluent, chainable interface to construct SQL queries progra
 The design follows the style and convenience of Laravel's query builder, adapted for Lua environments.
 
 ## Installation
-- Download the latest version from Releases page.
+- Download the latest version from [Releases page](https://github.com/ihaswn/mtasa-lua-querybuilder/releases/latest).
 - Extract the downloaded package to your server resources directory.
 - Add the queryBuilder resource to your `mtaserver.conf`:
 ```xml
@@ -54,9 +54,6 @@ print(query)
 -- SELECT id, score, name FROM users WHERE score >= 100 OR id = 1 LIMIT 1
 
 ```
-
-> [!WARNING]
-> The current version is not using `dbPrepareString()`, it will be supported in the feature updates, but for now be careful with the queries and values to avoid sql injections
 
 ## Features (planned / implemented so far)
 
